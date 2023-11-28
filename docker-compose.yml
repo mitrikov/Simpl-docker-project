@@ -1,0 +1,98 @@
+version: '3'
+
+networks:
+  nginx_network:
+    driver: bridge
+  wg_network:
+    external: true
+
+services:
+  nginx1:
+    image: nginx:latest
+    container_name: nginx1
+    networks:
+      - nginx_network
+    # ports:
+    #   - "8080:80"
+    expose:
+      - 8000
+    volumes:
+      - ./site1:/usr/share/nginx/html/site1
+      - ./site1/default.conf:/etc/nginx/conf.d/default.conf
+      - ./site1/ssl/cert.pem:/etc/nginx/conf.d/cert.pem
+      - ./site1/ssl/key.pem:/etc/nginx/conf.d/key.pem
+      - ./site1/ssl/pass.txt:/etc/nginx/conf.d/pass.txt
+  nginx2:
+    image: nginx:latest
+    container_name: nginx2
+    networks:
+      - nginx_network
+    # ports:
+    #   - "8081:80"
+    expose:
+      - 9000
+    volumes:
+      - ./site2:/usr/share/nginx/html/site2
+      - ./site2/default.conf:/etc/nginx/conf.d/default.conf
+      - ./site2/ssl/cert.pem:/etc/nginx/conf.d/cert.pem
+      - ./site2/ssl/key.pem:/etc/nginx/conf.d/key.pem
+      - ./site2/ssl/pass.txt:/etc/nginx/conf.d/pass.txt
+  nginx3:
+    image: nginx:latest
+    container_name: nginx3
+    networks:
+      - nginx_network
+    ports:
+      - "443:443"
+      - "8585:443"
+    volumes:
+      - ./ProxyNginx:/usr/share/nginx/html/main
+      - ./ProxyNginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./ProxyNginx/ssl/cert.pem:/etc/nginx/conf.d/cert.pem
+      - ./ProxyNginx/ssl/key.pem:/etc/nginx/conf.d/key.pem
+      - ./ProxyNginx/ssl/pass.txt:/etc/nginx/conf.d/pass.txt
+
+  wireguard:
+    image: lscr.io/linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - SERVERURL=auto
+      - SERVERPORT=51820
+      - PEERS=4
+      - PEERDNS=auto
+    volumes:
+      - ./wireguard/config:/config
+    ports:
+      - "51820:51820/udp"
+    restart: unless-stopped
+
+  # php:
+  #     image: php:7.4-apache
+  #     container_name: php
+  #     networks:
+  #       - nginx_network
+  #     volumes:
+  #       - ./php-site:/var/www/html
+  #     expose:
+  #       - 7000
+  #     restart: unless-stopped
+
+  nginx-php:
+      build:
+          context: .
+          dockerfile: ./site-php/Dockerfile
+      container_name: nginx-php
+      restart: unless-stopped
+      tty: true
+      environment:
+          SERVICE_NAME: nginx-php
+          SERVICE_TAGS: dev
+      volumes:
+          - ./site-php:/var/www
+      networks:
+          - nginx_network

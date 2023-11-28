@@ -1,0 +1,30 @@
+<!-- site1.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Site 1</title>
+</head>
+<body>
+    <h1>Site 1</h1>
+    <div id="userInputDisplay"></div>
+    <script>
+        // Check if there's a query parameter named "text" in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("text")) {
+            // Get the "text" query parameter value
+            const inputText = urlParams.get("text");
+
+            // Check if the inputText is not empty
+            if (inputText.trim() !== "") {
+                // Create a new element to properly interpret HTML entities
+                var div = document.createElement('div');
+                div.innerHTML = "User's Input: " + inputText;
+
+                // Append the content to the "userInputDisplay" div
+                document.getElementById("userInputDisplay").appendChild(div);
+            }
+        }
+    </script>
+</body>
+</html>
