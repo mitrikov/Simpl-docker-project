@@ -44,7 +44,7 @@ services:
       - nginx_network
     ports:
       - "443:443"
-      - "8585:443"
+      - "8585:80"
     volumes:
       - ./ProxyNginx:/usr/share/nginx/html/main
       - ./ProxyNginx/default.conf:/etc/nginx/conf.d/default.conf
