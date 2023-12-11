@@ -21,10 +21,12 @@
     <button onclick="proxySite2()">Site 2</button>
 
     <script>
+        const HOST = document.location.href
+
         function proxySite1() {
             var inputText = document.getElementById("inputSite1").value;
             if (inputText.trim() !== "") {
-                window.location.href = 'https://localhost/process.php?text=' + encodeURIComponent(inputText) + '&site=site1';
+                window.location.href = `${HOST}index.php?text=` + encodeURIComponent(inputText) + '&site=site1';
             } else {
                 alert("Please enter text for Site 1.");
             }
@@ -33,7 +35,7 @@
         function proxySite2() {
             var inputText = document.getElementById("inputSite2").value;
             if (inputText.trim() !== "") {
-                window.location.href = 'https://localhost/process.php?text=' + encodeURIComponent(inputText) + '&site=site2';
+                window.location.href = `${HOST}index.php?text=` + encodeURIComponent(inputText) + '&site=site2';
             } else {
                 alert("Please enter text for Site 2.");
             }
