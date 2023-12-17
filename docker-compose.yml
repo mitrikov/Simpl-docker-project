@@ -52,35 +52,24 @@ services:
       - ./ProxyNginx/ssl/key.pem:/etc/nginx/conf.d/key.pem
       - ./ProxyNginx/ssl/pass.txt:/etc/nginx/conf.d/pass.txt
 
-  wireguard:
-    image: lscr.io/linuxserver/wireguard
-    container_name: wireguard
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - SERVERURL=auto
-      - SERVERPORT=51820
-      - PEERS=4
-      - PEERDNS=auto
-    volumes:
-      - ./wireguard/config:/config
-    ports:
-      - "51820:51820/udp"
-    restart: unless-stopped
-
-  # php:
-  #     image: php:7.4-apache
-  #     container_name: php
-  #     networks:
-  #       - nginx_network
-  #     volumes:
-  #       - ./php-site:/var/www/html
-  #     expose:
-  #       - 7000
-  #     restart: unless-stopped
+  #wireguard:
+    #image: lscr.io/linuxserver/wireguard
+    #container_name: wireguard
+    #cap_add:
+    #  - NET_ADMIN
+    #environment:
+    #  - PUID=1000
+    #  - PGID=1000
+    #  - TZ=Europe/London
+    #  - SERVERURL=auto
+    #  - SERVERPORT=51820
+    #  - PEERS=4
+    #  - PEERDNS=auto
+    #volumes:
+    #  - ./wireguard/config:/config
+    #ports:
+    #  - "51820:51820/udp"
+    #restart: unless-stopped
 
   nginx-php:
       build:
@@ -96,3 +85,19 @@ services:
           - ./site-php:/var/www
       networks:
           - nginx_network
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    networks:
+      - nginx_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root_test
+      MYSQL_DATABASE: sample-data
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
