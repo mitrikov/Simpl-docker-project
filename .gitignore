@@ -1,5 +1,2 @@
 ﻿.idea
-mysql_data/mysql.sock
-mysql_data/auto.cnf
-mysql_data/binlog.index
-mysql_data/ib_buffer_pool
+mysql_data/
