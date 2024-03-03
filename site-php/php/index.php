@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "INSERT INTO first_table (name, phone_number, email, text) VALUES ('$name', '$phoneNumber', '$email', '$inputText')";
+        $sql = "INSERT INTO feedback (name, phone_number, email, text) VALUES ('$name', '$phoneNumber', '$email', '$inputText')";
         if ($conn->query($sql) === TRUE) {
             echo "Data inserted into MySQL successfully.";
         } else {
