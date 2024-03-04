@@ -52,25 +52,6 @@ services:
       - ./ProxyNginx/ssl/key.pem:/etc/nginx/conf.d/key.pem
       - ./ProxyNginx/ssl/pass.txt:/etc/nginx/conf.d/pass.txt
 
-  #wireguard:
-    #image: lscr.io/linuxserver/wireguard
-    #container_name: wireguard
-    #cap_add:
-    #  - NET_ADMIN
-    #environment:
-    #  - PUID=1000
-    #  - PGID=1000
-    #  - TZ=Europe/London
-    #  - SERVERURL=auto
-    #  - SERVERPORT=51820
-    #  - PEERS=4
-    #  - PEERDNS=auto
-    #volumes:
-    #  - ./wireguard/config:/config
-    #ports:
-    #  - "51820:51820/udp"
-    #restart: unless-stopped
-
   nginx-php:
       build:
           context: .
@@ -93,11 +74,13 @@ services:
       - nginx_network
     environment:
       MYSQL_ROOT_PASSWORD: root_test
-      MYSQL_DATABASE: sample-data
+      MYSQL_DATABASE: feedback
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     volumes:
       - ./mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
+    command: --init-file /docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped

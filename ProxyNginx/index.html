@@ -1,43 +1,90 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proxy Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Proxy to:</h1>
+    <h1>Write feedback:</h1>
 
-    <!-- Button for Site 1 -->
-    <label for="inputSite1">Enter text for Site 1:</label>
-    <input type="text" id="inputSite1" placeholder="Enter text for Site 1">
-    <button onclick="proxySite1()">Site 1</button>
+    <!-- Form for Data Submission -->
+    <form action="/index.php" method="POST">
+        <!-- Name -->
+        <label for="inputName">Name:</label>
+        <input type="text" id="inputName" name="name" placeholder="Enter your name" required>
 
-    <!-- Button for Site 2 -->
-    <label for="inputSite2">Enter text for Site 2:</label>
-    <input type="text" id="inputSite2" placeholder="Enter text for Site 2">
-    <button onclick="proxySite2()">Site 2</button>
+        <!-- Phone number -->
+        <label for="inputPhoneNumber">Phone Number:</label>
+        <input type="tel" id="inputPhoneNumber" name="phoneNumber" placeholder="Enter your phone number" 
+                pattern="^\+?[78][0-9]{10}$" 
+                title="Please enter a valid Russian phone number (starting with +7 or 8, followed by 10 digits)" 
+        required>
+
+        <!-- E-mail -->
+        <label for="inputEmail">E-mail:</label>
+        <input type="email" id="inputEmail" name="email" placeholder="Enter your email" required>
+
+        <!-- Message text -->
+        <label for="inputText">Text of feedback:</label>
+        <input type="text" id="inputText" name="text" placeholder="Enter text for your feedback"
+                maxlength="1000" 
+        required>
+
+        <!-- Button for Site 1 -->
+        <button type="submit">Submit</button>
+    </form>
 
     <script>
-        const HOST = document.location.href
+        const HOST = document.location.origin
 
         function proxySite1() {
-            var inputText = document.getElementById("inputSite1").value;
+            var inputText = document.getElementById("inputText").value;
             if (inputText.trim() !== "") {
                 window.location.href = `${HOST}index.php?text=` + encodeURIComponent(inputText) + '&site=site1';
             } else {
                 alert("Please enter text for Site 1.");
-            }
-        }
-
-        function proxySite2() {
-            var inputText = document.getElementById("inputSite2").value;
-            if (inputText.trim() !== "") {
-                window.location.href = `${HOST}index.php?text=` + encodeURIComponent(inputText) + '&site=site2';
-            } else {
-                alert("Please enter text for Site 2.");
             }
         }
     </script>
