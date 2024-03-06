@@ -21,13 +21,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "INSERT INTO feedback (name, phone_number, email, text) VALUES ('$name', '$phoneNumber', '$email', '$inputText')";
-        if ($conn->query($sql) === TRUE) {
+        // Используйте подготовленные запросы для предотвращения SQL-инъекций
+        $sql = $conn->prepare("INSERT INTO feedback (name, phone_number, email, text) VALUES (?, ?, ?, ?)");
+        $sql->bind_param("ssss", $name, $phoneNumber, $email, $inputText);
+
+        if ($sql->execute()) {
             echo "Data inserted into MySQL successfully.";
         } else {
-            echo "Error inserting record: " . $conn->error;
+            echo "Error inserting record: " . $sql->error;
         }
 
+        $sql->close();
         $conn->close();
     } else {
         echo "Text is empty.";
