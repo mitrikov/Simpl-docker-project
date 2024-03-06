@@ -21,7 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // Используйте подготовленные запросы для предотвращения SQL-инъекций
         $sql = $conn->prepare("INSERT INTO feedback (name, phone_number, email, text) VALUES (?, ?, ?, ?)");
         $sql->bind_param("ssss", $name, $phoneNumber, $email, $inputText);
 
